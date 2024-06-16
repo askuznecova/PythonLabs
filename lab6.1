@@ -1,1 +1,35 @@
+import numpy as np
+from scipy.optimize import minimize
 
+# Определение функции
+def func(x):
+    return x[0] + 5 * x[1] + np.exp(x[0]**2 + x[1]**2)
+
+# Метод покоординатного спуска
+def coordinate_descent(f, x_init, tol=1e-6, max_iter=1000):
+    x = np.array(x_init)
+    n = len(x)
+    
+    for _ in range(max_iter):
+        for i in range(n):
+            x_new = np.copy(x)
+            
+            # Минимизируем функцию по i-й координате, фиксируя остальные
+            min_result = minimize(lambda xi: f(np.insert(x_new, i, xi)), x[i], method='Nelder-Mead', tol=tol)
+            x_new[i] = min_result.x[0]
+        
+        if np.linalg.norm(x_new - x) < tol:
+            break
+        
+        x = x_new
+    
+    return x
+
+# Начальное приближение
+x_init = [0.0, 0.0]
+
+# Вызов метода покоординатного спуска
+x_opt = coordinate_descent(func, x_init)
+
+print("Оптимальные значения x1 и x2:", x_opt)
+print("Значение функции в оптимальной точке:", func(x_opt))
