@@ -1,1 +1,53 @@
+import numpy as np
 
+# Матрица коэффициентов
+A = np.array([
+    [9, -5, -6, 3],
+    [1, -7, 1, 0],
+    [3, -4, 9, 0],
+    [6, -1, 9, 8]
+])
+
+# Вектор свободных членов
+b = np.array([-8, 38, 47, -8])
+
+# Решение матричным методом
+x_matrix = np.linalg.solve(A, b)
+print("Решение матричным методом:", x_matrix)
+
+# Метод Гаусса
+def gauss_elimination(A, b):
+    n = len(b)
+    # Прямой ход
+    for i in range(n):
+        # Поиск главного элемента
+        max_row = i + np.argmax(np.abs(A[i:, i]))
+        # Перестановка строк
+        if i != max_row:
+            A[[i, max_row]] = A[[max_row, i]]
+            b[[i, max_row]] = b[[max_row, i]]
+        
+        # Нормализация строки
+        A[i] = A[i] / A[i, i]
+        b[i] = b[i] / A[i, i]
+        
+        # Обнуление элементов ниже главного
+        for j in range(i + 1, n):
+            factor = A[j, i]
+            A[j] -= factor * A[i]
+            b[j] -= factor * b[i]
+    
+    # Обратный ход
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = b[i] - np.sum(A[i, i+1:] * x[i+1:])
+    
+    return x
+
+# Копируем матрицу и вектор, чтобы не изменять оригиналы
+A_copy = A.copy()
+b_copy = b.copy()
+
+# Решение методом Гаусса
+x_gauss = gauss_elimination(A_copy, b_copy)
+print("Решение методом Гаусса:", x_gauss)
