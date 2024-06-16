@@ -1,1 +1,55 @@
+import numpy as np
 
+# Матрица коэффициентов
+A = np.array([
+    [0, 2, 2],
+    [5, -2, 5],
+    [2, 2, 5]
+])
+
+# Вектор свободных членов
+b = np.array([-1, 2, 0])
+
+# Метод Крамера
+def kramer(A, b):
+    det_A = np.linalg.det(A)
+    if det_A == 0:
+        raise ValueError("Определитель матрицы равен нулю, решение не существует или их бесконечно много.")
+    
+    n = len(b)
+    x = np.zeros(n)
+    
+    for i in range(n):
+        A_i = np.copy(A)
+        A_i[:, i] = b
+        x[i] = np.linalg.det(A_i) / det_A
+    
+    return x
+
+# Метод Якоби
+def jacobi(A, b, x_init=None, tol=1e-10, max_iterations=100):
+    n = len(b)
+    x = np.zeros(n) if x_init is None else x_init
+    x_new = np.zeros(n)
+    
+    for iteration in range(max_iterations):
+        for i in range(n):
+            s = sum(A[i][j] * x[j] for j in range(n) if j != i)
+            x_new[i] = (b[i] - s) / A[i][i]
+        
+        if np.linalg.norm(x_new - x, ord=np.inf) < tol:
+            break
+        x = np.copy(x_new)
+    
+    return x
+
+# Решение методом Крамера
+try:
+    x_kramer = kramer(A, b)
+    print("Решение методом Крамера:", x_kramer)
+except ValueError as e:
+    print(e)
+
+# Решение методом Якоби
+x_jacobi = jacobi(A, b)
+print("Решение методом Якоби:", x_jacobi)
