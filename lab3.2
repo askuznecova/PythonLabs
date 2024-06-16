@@ -1,1 +1,36 @@
+import numpy as np
 
+# Функция подынтегрального выражения
+def f(x):
+    return np.exp(-2*x) * np.sin(5*x)
+
+# Функция для численного интегрирования методом прямоугольников
+def rectangle_rule_integration(f, a, b, tol=1e-6):
+    integral_prev = 0.0
+    n = 1
+    dx = (b - a) / n
+    integral_curr = f(a + dx / 2) * dx
+    
+    while np.abs(integral_curr - integral_prev) > tol:
+        n *= 2
+        dx = (b - a) / n
+        sum_val = 0.0
+        
+        for i in range(n):
+            x_left = a + i * dx
+            x_right = x_left + dx
+            sum_val += f((x_left + x_right) / 2)
+        
+        integral_prev = integral_curr
+        integral_curr = sum_val * dx
+    
+    return integral_curr
+
+# Границы интегрирования
+a = 0.0
+b = np.inf  # бесконечность можно задать как np.inf или достаточно большое число
+
+# Вызов функции для интегрирования с заданной точностью
+integral_value = rectangle_rule_integration(f, a, b)
+
+print(f"Значение интеграла от 0 до +бесконечности (e^-2x * sin(5x)) dx методом прямоугольников: {integral_value:.7f}")
