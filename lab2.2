@@ -1,1 +1,93 @@
+import numpy as np
 
+# Создаем три случайных вектора в пространстве
+vector1 = np.random.rand(3)
+vector2 = np.random.rand(3)
+vector3 = np.random.rand(3)
+
+# Функция для вычисления длины вектора
+def vector_length(vector):
+    return np.linalg.norm(vector)
+
+# Функция для вычисления угла между двумя векторами
+def angle_between_vectors(v1, v2):
+    cos_theta = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    # Ограничиваем значение cos_theta в диапазоне [-1, 1] чтобы избежать ошибок вычислений из-за неточности
+    cos_theta = np.clip(cos_theta, -1.0, 1.0)
+    return np.arccos(cos_theta) * (180.0 / np.pi)
+
+# Функция для проверки параллельности двух векторов
+def are_parallel(v1, v2):
+    cross_product = np.cross(v1, v2)
+    return np.allclose(cross_product, 0)
+
+# Функция для проверки того, лежат ли векторы в одной плоскости
+def are_coplanar(v1, v2, v3):
+    mixed_product = np.dot(np.cross(v1, v2), v3)
+    return np.isclose(mixed_product, 0)
+
+# Вычисление длин векторов
+length1 = vector_length(vector1)
+length2 = vector_length(vector2)
+length3 = vector_length(vector3)
+
+# Вычисление углов между векторами
+angle_12 = angle_between_vectors(vector1, vector2)
+angle_13 = angle_between_vectors(vector1, vector3)
+angle_23 = angle_between_vectors(vector2, vector3)
+
+# Вычисление сумм и разностей векторов
+sum_12 = vector1 + vector2
+sum_13 = vector1 + vector3
+sum_23 = vector2 + vector3
+
+diff_12 = vector1 - vector2
+diff_13 = vector1 - vector3
+diff_23 = vector2 - vector3
+
+# Проверка параллельности векторов
+parallel_12 = are_parallel(vector1, vector2)
+parallel_13 = are_parallel(vector1, vector3)
+parallel_23 = are_parallel(vector2, vector3)
+
+# Проверка на компланарность
+coplanar = are_coplanar(vector1, vector2, vector3)
+
+# Вычисление смешанного произведения трех векторов
+mixed_product = np.dot(np.cross(vector1, vector2), vector3)
+
+# Вывод результатов
+print("Vector 1:", vector1)
+print("Vector 2:", vector2)
+print("Vector 3:", vector3)
+
+print("\nLengths of the vectors:")
+print("Length of Vector 1:", length1)
+print("Length of Vector 2:", length2)
+print("Length of Vector 3:", length3)
+
+print("\nAngles between vectors (in degrees):")
+print("Angle between Vector 1 and Vector 2:", angle_12)
+print("Angle between Vector 1 and Vector 3:", angle_13)
+print("Angle between Vector 2 and Vector 3:", angle_23)
+
+print("\nSums of vectors:")
+print("Vector 1 + Vector 2:", sum_12)
+print("Vector 1 + Vector 3:", sum_13)
+print("Vector 2 + Vector 3:", sum_23)
+
+print("\nDifferences of vectors:")
+print("Vector 1 - Vector 2:", diff_12)
+print("Vector 1 - Vector 3:", diff_13)
+print("Vector 2 - Vector 3:", diff_23)
+
+print("\nParallelism check:")
+print("Are Vector 1 and Vector 2 parallel?", parallel_12)
+print("Are Vector 1 and Vector 3 parallel?", parallel_13)
+print("Are Vector 2 and Vector 3 parallel?", parallel_23)
+
+print("\nCoplanarity check:")
+print("Are vectors coplanar?", coplanar)
+
+print("\nMixed product of the vectors:")
+print("Mixed product of Vector 1, Vector 2, and Vector 3:", mixed_product)
